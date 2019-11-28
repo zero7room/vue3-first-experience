@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>hello vue3</title>
+    <script src="./vue.global.js"></script>
+</head>
+
+<body>
+    <div id='app'></div>
+    <script>
+        const {
+            reactive,
+            effect,
+            createApp,
+            ref,
+            computed,
+            watch,
+            onMounted,
+            onUnmounted,
+        } = Vue;
+        function useMouse() {
+            const x = ref(0)
+            const y = ref(0)
+            const update = e => {
+                x.value = e.pageX
+                y.value = e.pageY
+            }
+            onMounted(() => {
+                window.addEventListener('mousemove', update)
+            })
+            onUnmounted(() => {
+                window.removeEventListener('mousemove', update)
+            })
+            return { x, y }
+        }
+		function getTime() {
+			const date = ref(0);
+			const timer = null;
+			date.value = new Date();
+            onMounted(() => {
+                timer = setInterval(() => {
+					date.value = new Date();
+				}, 1000)
+            })
+            onUnmounted(() => {
+                timer = null;
+            })
+			return { date }
+		}
+        // 在组件中使用该函数
+        const Component = {
+            setup() {
+                const { x, y } = useMouse()
+                // 与其它函数配合使用
+                const { date } = getTime()
+                return { x, y, date }
+            },
+            template: `<div>坐标{{ x }} {{ y }} <br/>时间{{ date }}</div>`
+        }
+        createApp().mount(Component, '#app')
+    </script>
+</body>
+
+</html>

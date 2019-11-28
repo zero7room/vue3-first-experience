@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>hello vue3</title>
+    <script src="./vue.global.js"></script>
+</head>
+
+<body>
+    <div id='app'></div>
+    <script>
+        const {
+			reactive,
+			effect,
+			createApp,
+            ref,
+            computed,
+            watch,
+            onMounted
+        } = Vue;
+        const App = {
+            template: `
+					<div>
+					  <span>count is {{ count }}</span>
+					  <span>plusOne is {{ plusOne }}</span>
+					  <button @click="increment">count++</button>
+					</div>
+				  `,
+            setup() {
+                // reactive state
+                const count = ref(0)
+                // computed state
+                const plusOne = computed(() => count.value + 1)
+                // method
+                const increment = () => {
+                    count.value++
+                }
+                // watch
+                watch(() => count.value * 2, val => {
+                    console.log(`count * 2 is ${val}`)
+                })
+                // lifecycle
+                onMounted(() => {
+                    console.log(`mounted`)
+                })
+                // expose bindings on render context
+                return {
+                    count,
+                    plusOne,
+                    increment
+                }
+            }
+        }
+		createApp().mount(App, '#app')
+    </script>
+</body>
+
+</html>
